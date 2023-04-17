@@ -7,7 +7,7 @@ function App() {
     e.preventDefault();
   });
 
-  const addMenu = () => {
+  const addMenuName = () => {
     if ($("#espresso-menu-name").value === "") {
       alert("값을 입력해주세요!");
       return;
@@ -49,41 +49,44 @@ function App() {
     $(".menu-count").innerText = `총 ${menuCount}개`;
   };
 
+  const updateMenuName = (e) => {
+    // https://developer.mozilla.org/ko/docs/Web/API/Element/closest
+    const $menuName = e.target.closest("li").querySelector(".menu-name");
+    const updatedMenuName = prompt("메뉴명을 수정하세요", $menuName.innerText);
+    if (updatedMenuName) {
+      $menuName.innerText = updatedMenuName;
+    }
+  };
+
+  const removeMenuName = (e) => {
+    if (confirm("정말 삭제하시겠습니까?")) {
+      const element = e.target.closest("li");
+      element.remove(); // DOM API
+      updateMenuCount();
+    }
+  };
+
   // # 이벤트 위임을 통해 메뉴 수정하기
   $("#espresso-menu-list").addEventListener("click", (e) => {
     if (e.target.classList.contains("menu-edit-button")) {
-      // https://developer.mozilla.org/ko/docs/Web/API/Element/closest
-      const $menuName = e.target.closest("li").querySelector(".menu-name");
-      const updatedMenuName = prompt(
-        "메뉴명을 수정하세요",
-        $menuName.innerText
-      );
-      if (updatedMenuName) {
-        $menuName.innerText = updatedMenuName;
-      }
+      updateMenuName(e);
     }
 
     // # 이벤트 위임을 통해 메뉴 삭제하기
     if (e.target.classList.contains("menu-remove-button")) {
-      if (confirm("정말 삭제하시겠습니까?")) {
-        const element = e.target.closest("li");
-        element.remove(); // DOM API
-        updateMenuCount();
-      }
+      removeMenuName(e);
     }
   });
 
   // # 클릭이벤트 활용하여 메뉴 추가하기
-  $("#espresso-menu-submit-button").addEventListener("click", (e) => {
-    addMenu();
-  });
+  $("#espresso-menu-submit-button").addEventListener("click", addMenuName);
 
   // # 엔터눌러서 메뉴 추가하기
   $("#espresso-menu-name").addEventListener("keypress", (e) => {
     if (e.key !== "Enter") {
       return;
     }
-    addMenu();
+    addMenuName();
   });
 }
 
