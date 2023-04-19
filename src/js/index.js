@@ -12,9 +12,16 @@ const store = {
 
 function App() {
   // 상태: 이 앱에서 변하는 데이터 - 메뉴명
-  this.menu = [];
+  this.menu = {
+    espresso: [],
+    frappuccino: [],
+    blended: [],
+    teavana: [],
+    desert: [],
+  };
+  this.currentCategory = "espresso";
   this.init = () => {
-    if (store.getLocalStorage().length) {
+    if (store.getLocalStorage()) {
       this.menu = store.getLocalStorage();
       render();
     }
@@ -26,7 +33,7 @@ function App() {
   });
 
   const render = () => {
-    const template = this.menu
+    const template = this.menu[this.currentCategory]
       .map((menuItem, index) => {
         //https://developer.mozilla.org/ko/docs/Web/HTML/Global_attributes/data-*
         return `<li data-menu-id="${index}" class="menu-list-item d-flex items-center py-2">
@@ -59,7 +66,7 @@ function App() {
       return;
     }
     const espressoMenuName = $("#espresso-menu-name").value;
-    this.menu.push({
+    this.menu[this.currentCategory].push({
       name: espressoMenuName,
     });
 
@@ -81,7 +88,7 @@ function App() {
     // https://developer.mozilla.org/ko/docs/Web/API/Element/closest
     const $menuName = e.target.closest("li").querySelector(".menu-name");
     const updatedMenuName = prompt("메뉴명을 수정하세요", $menuName.innerText);
-    this.menu[menuId].name = updatedMenuName;
+    this.menu[this.currentCategory][menuId].name = updatedMenuName;
     if (updatedMenuName) {
       $menuName.innerText = updatedMenuName;
       store.setLocalStorage(this.menu);
@@ -93,7 +100,7 @@ function App() {
       const element = e.target.closest("li");
       element.remove(); // DOM API
       const menuId = e.target.closest("li").dataset.menuId;
-      this.menu.splice(menuId, 1);
+      this.menu[this.currentCategory].splice(menuId, 1);
       store.setLocalStorage(this.menu);
 
       updateMenuCount();
@@ -121,6 +128,16 @@ function App() {
       return;
     }
     addMenuName();
+  });
+
+  $("nav").addEventListener("click", (e) => {
+    const isCategoryButton = e.target.classList.contains("cafe-category-name");
+    if (isCategoryButton) {
+      const categoryName = e.target.dataset.categoryName;
+      this.currentCategory = categoryName;
+      $("#category-title").innerText = `${e.target.innerText} 메뉴 관리`;
+      render();
+    }
   });
 }
 
