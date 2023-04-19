@@ -37,7 +37,15 @@ function App() {
       .map((menuItem, index) => {
         //https://developer.mozilla.org/ko/docs/Web/HTML/Global_attributes/data-*
         return `<li data-menu-id="${index}" class="menu-list-item d-flex items-center py-2">
-          <span class="w-100 pl-2 menu-name">${menuItem.name}</span>
+          <span class="w-100 pl-2 menu-name ${
+            menuItem.soldOut ? "sold-out" : ""
+          }">${menuItem.name}</span>
+          <button
+            type="button"
+            class="bg-gray-50 text-gray-500 text-sm mr-1 menu-sold-out-button"
+          >
+            품절
+          </button>
           <button
             type="button"
             class="bg-gray-50 text-gray-500 text-sm mr-1 menu-edit-button"
@@ -107,15 +115,31 @@ function App() {
     }
   };
 
-  // # 이벤트 위임을 통해 메뉴 수정하기
+  const soldOutMenu = (e) => {
+    const menuId = e.target.closest("li").dataset.menuId;
+    this.menu[this.currentCategory][menuId].soldOut =
+      !this.menu[this.currentCategory][menuId].soldOut;
+    store.setLocalStorage(this.menu);
+    render();
+  };
+
   $("#menu-list").addEventListener("click", (e) => {
+    // # 이벤트 위임을 통해 메뉴 수정하기
     if (e.target.classList.contains("menu-edit-button")) {
       updateMenuName(e);
+      return;
     }
 
     // # 이벤트 위임을 통해 메뉴 삭제하기
     if (e.target.classList.contains("menu-remove-button")) {
       removeMenuName(e);
+      return;
+    }
+
+    // # 이벤트 위임을 통해 품절 시키기
+    if (e.target.classList.contains("menu-sold-out-button")) {
+      soldOutMenu(e);
+      return;
     }
   });
 
