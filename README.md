@@ -84,10 +84,10 @@
 ## 🎯 step2 요구사항 - 상태 관리로 메뉴 관리하기
 
 - [ ] [localStorage](https://developer.mozilla.org/ko/docs/Web/API/Window/localStorage)에 데이터를 저장하여 새로고침해도 데이터가 남아있게 한다.
-  - [ ] localStorage에 데이터를 저장한다.
+  - [x] localStorage에 데이터를 저장한다.
     - [x] 메뉴를 추가할 때
-    - [ ] 메뉴를 수정할 때
-    - [ ] 메뉴를 삭제할 때
+    - [x] 메뉴를 수정할 때
+    - [x] 메뉴를 삭제할 때
   - [ ] localStorage에 있는 데이터를 읽어온다.
 - [ ] 에스프레소, 프라푸치노, 블렌디드, 티바나, 디저트 각각의 종류별로 메뉴판을 관리할 수 있게 만든다.
   - [ ] 에스프레소 메뉴판 관리

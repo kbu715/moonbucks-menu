@@ -32,9 +32,10 @@ function App() {
     store.setLocalStorage(this.menu);
 
     const template = this.menu
-      .map((item) => {
-        return `<li class="menu-list-item d-flex items-center py-2">
-            <span class="w-100 pl-2 menu-name">${item.name}</span>
+      .map((menuItem, index) => {
+        //https://developer.mozilla.org/ko/docs/Web/HTML/Global_attributes/data-*
+        return `<li data-menu-id="${index}" class="menu-list-item d-flex items-center py-2">
+            <span class="w-100 pl-2 menu-name">${menuItem.name}</span>
             <button
               type="button"
               class="bg-gray-50 text-gray-500 text-sm mr-1 menu-edit-button"
@@ -66,11 +67,14 @@ function App() {
   };
 
   const updateMenuName = (e) => {
+    const menuId = e.target.closest("li").dataset.menuId;
     // https://developer.mozilla.org/ko/docs/Web/API/Element/closest
     const $menuName = e.target.closest("li").querySelector(".menu-name");
     const updatedMenuName = prompt("메뉴명을 수정하세요", $menuName.innerText);
+    this.menu[menuId].name = updatedMenuName;
     if (updatedMenuName) {
       $menuName.innerText = updatedMenuName;
+      store.setLocalStorage(this.menu);
     }
   };
 
@@ -78,6 +82,10 @@ function App() {
     if (confirm("정말 삭제하시겠습니까?")) {
       const element = e.target.closest("li");
       element.remove(); // DOM API
+      const menuId = e.target.closest("li").dataset.menuId;
+      this.menu.splice(menuId, 1);
+      store.setLocalStorage(this.menu);
+
       updateMenuCount();
     }
   };
