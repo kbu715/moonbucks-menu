@@ -6,18 +6,52 @@ const store = {
     localStorage.setItem("menu", JSON.stringify(menu));
   },
   getLocalStorage() {
-    localStorage.getItem("menu");
+    return JSON.parse(localStorage.getItem("menu"));
   },
 };
 
 function App() {
   // 상태: 이 앱에서 변하는 데이터 - 메뉴명
   this.menu = [];
+  this.init = () => {
+    if (store.getLocalStorage().length) {
+      this.menu = store.getLocalStorage();
+      render();
+    }
+  };
 
   // Form 태그가 자동적으로 전송되는 걸 막아줌
   $("#espresso-menu-form").addEventListener("submit", (e) => {
     e.preventDefault();
   });
+
+  const render = () => {
+    const template = this.menu
+      .map((menuItem, index) => {
+        //https://developer.mozilla.org/ko/docs/Web/HTML/Global_attributes/data-*
+        return `<li data-menu-id="${index}" class="menu-list-item d-flex items-center py-2">
+          <span class="w-100 pl-2 menu-name">${menuItem.name}</span>
+          <button
+            type="button"
+            class="bg-gray-50 text-gray-500 text-sm mr-1 menu-edit-button"
+          >
+            수정
+          </button>
+          <button
+            type="button"
+            class="bg-gray-50 text-gray-500 text-sm menu-remove-button"
+          >
+            삭제
+          </button>
+        </li>`;
+      })
+      .join("");
+
+    $("#espresso-menu-list").innerHTML = template;
+
+    // 총 메뉴 갯수 count
+    updateMenuCount();
+  };
 
   const addMenuName = () => {
     if ($("#espresso-menu-name").value === "") {
@@ -31,32 +65,8 @@ function App() {
 
     store.setLocalStorage(this.menu);
 
-    const template = this.menu
-      .map((menuItem, index) => {
-        //https://developer.mozilla.org/ko/docs/Web/HTML/Global_attributes/data-*
-        return `<li data-menu-id="${index}" class="menu-list-item d-flex items-center py-2">
-            <span class="w-100 pl-2 menu-name">${menuItem.name}</span>
-            <button
-              type="button"
-              class="bg-gray-50 text-gray-500 text-sm mr-1 menu-edit-button"
-            >
-              수정
-            </button>
-            <button
-              type="button"
-              class="bg-gray-50 text-gray-500 text-sm menu-remove-button"
-            >
-              삭제
-            </button>
-          </li>`;
-      })
-      .join("");
-
-    $("#espresso-menu-list").innerHTML = template;
-
-    // 총 메뉴 갯수 count
-    updateMenuCount();
-
+    // render
+    render();
     // input 빈값으로
     $("#espresso-menu-name").value = ``;
   };
@@ -115,3 +125,5 @@ function App() {
 }
 
 const app = new App();
+
+app.init();
