@@ -67,6 +67,16 @@ function App() {
     }
     const menuName = $("#menu-name").value;
 
+    const duplicatedItem = this.menu[this.currentCategory].find(
+      (menu) => menu.name === menuName
+    );
+
+    if (duplicatedItem) {
+      alert("이미 등록된 메뉴입니다. 다시 입력해주세요.");
+      $("#menu-name").value = ``;
+      return;
+    }
+
     await MenuApi.createMenu(this.currentCategory, menuName);
 
     render();

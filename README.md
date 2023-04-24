@@ -146,7 +146,7 @@
   - [x] fetch 비동기 api를 사용하는 부분을 async await을 사용하여 구현한다.
 
 - [x] API 통신이 실패하는 경우에 대해 사용자가 알 수 있게 [alert](https://developer.mozilla.org/ko/docs/Web/API/Window/alert)으로 예외처리를 진행한다.
-- [ ] 중복되는 메뉴는 추가할 수 없다.
+- [x] 중복되는 메뉴는 추가할 수 없다.
 
 ## 📝 API
 
